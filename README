@@ -1,0 +1,18 @@
+This will repro issue with increasing storage entries in a distributor scenario in NSB 3.3.5. You need to machines to test this, A and B.
+The scenario is a simple distributor with a single worker. The only thing the worker do is hook up to it's distributor and subscribes to it's own event.
+
+1) Download this code
+2) Update masternode/distributor machine name and message mapping in app.config for Orders.Handler.Worker1 to point to A.
+3) Build
+4) Copy Orders.Handler(this is the distributor) to machine A and Orders.Handler.Worker1 to machine B
+5) Start Orders.Handler on A with NServiceBus.Host.Exe NServiceBus.Integration NServiceBus.Distributor
+6) Start Orders.Handler.Worker1 on B with NServiceBus.Host.Exe NServiceBus.Integration NServiceBus.Worker
+
+Both start up, and you get the expected result: 5 entries in the Orders.Handler.Distributor.Storage queue on A.
+
+7) Kill Orders.Handler.Worker1 on B and restart it.
+
+Now you end up with a incorrect result: 6 entries in Orders.Handler.Distributor.Storage. This is clearly wrong, restarting Orders.Handler.Worker1 on B should have reset the storage entries for it to 5.
+
+If you PURGE Orders.Handler.Distributor.Storage between 6 and 7, everything works as expected.
+

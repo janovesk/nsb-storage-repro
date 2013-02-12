@@ -1,4 +1,4 @@
-This will repro issue with increasing storage entries in a distributor scenario in NSB 3.3.5. You need to machines to test this, A and B.
+This will repro issue with increasing storage entries in a distributor scenario in NSB 3.3.5. You need two machines to test this, A and B.
 The scenario is a simple distributor with a single worker. The only thing the worker do is hook up to it's distributor and it has a messagehandler that subscribes to it's OWN event.
 
 1) Download this code
